@@ -8,7 +8,9 @@ export interface IUser {
     gender?: string
     address?: string
     city?: string
-    email2?: string
     claims?: number
+    age: string
+    active: boolean
+    outsource: boolean
   }
   

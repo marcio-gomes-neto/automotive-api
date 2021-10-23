@@ -29,6 +29,10 @@ export default class AddUserUseCase{
     
             keyWithNoSpace = _input.phone.replace(/\s/g, '')
             if (keyWithNoSpace.length < 3 || _input.phone === null || _input.phone === undefined) throw new Error('Invalid phone')
+
+            keyWithNoSpace = _input.age.replace(/\s/g, '')
+            if (keyWithNoSpace.length < 1 || _input.age === null || _input.age === undefined) throw new Error('Invalid age')
+
             
             const userData:IUser = {
                 name:"",
@@ -39,10 +43,13 @@ export default class AddUserUseCase{
                 gender: "",
                 address: "",
                 city: "",
-                email2: ""
+                age: "",
+                active: true,
+                outsource: false
             }
     
             for(const key in _input){
+                if(key!= "name" && key!= "cpf" && key!= "cnh" && key != "gender" && key!= "city" && key!= "phone" && key!= "address" && key!= "email" &&  key!= "age") throw new Error(`Unexpected Key '${key}'`)
                 if(typeof _input[key] != "string") throw new Error(`Invalid ${key}`)
                 userData[key] = _input[key]
             }
@@ -50,7 +57,6 @@ export default class AddUserUseCase{
             const userService = new UserServices
             const resultAddUser = await userService.SaveNewUser(userData)
             
-            console.log(resultAddUser)
             this.result.RespondOk(resultAddUser)
 
         } catch (error) {

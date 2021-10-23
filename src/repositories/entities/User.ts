@@ -30,10 +30,16 @@ export class user implements IUser {
     @Column({ type: "varchar", length: 255, nullable: true})
     city: string
 
-    @Column({ type: "varchar", length: 255, nullable: true})
-    email2: string
-
     @Column({ type: "integer"})
     claims: number
+
+    @Column({ type: "varchar", length: 255, nullable: false})
+    age: string
+
+    @Column({ type: "boolean", nullable: false})
+    active: boolean
+
+    @Column({ type: "boolean", nullable: false})
+    outsource: boolean
   }
   

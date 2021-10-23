@@ -1,7 +1,8 @@
 import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm'
+import { IOutsource } from '../intefaces/outsource/IOutsource'
 
 @Entity()
-export class Outsource {
+export class outsource implements IOutsource {
     @PrimaryGeneratedColumn()
     id:number
     
@@ -19,4 +20,10 @@ export class Outsource {
 
     @Column({ type: "varchar", length: 255, nullable: false})
     phone: string
+
+    @Column({ type: "boolean", nullable: false})
+    user: boolean
+
+    @Column({ type: "integer", nullable: false})
+    claims: number
 }

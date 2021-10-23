@@ -4,7 +4,7 @@ import { IRequest } from "../../../../config/interfaces/IRequest";
 import { Presenter } from "../../../Presenter";
 import  findUserUseCase  from "../useCase/findUserUseCase";
 
-export default class findUserByIdController implements IController{
+export default class findUserByCpfController implements IController{
     private readonly presenter: IPresenter
     
     constructor(){
@@ -12,9 +12,9 @@ export default class findUserByIdController implements IController{
     }
 
     public async Handle(request:IRequest){
-
+        
       const useCaseResponse = new findUserUseCase(this.presenter)
-      await useCaseResponse.IdExecuteAsync(request.params.id)
+      await useCaseResponse.CpfExecuteAsync(request.params.cpf)
 
       return this.presenter
     }
