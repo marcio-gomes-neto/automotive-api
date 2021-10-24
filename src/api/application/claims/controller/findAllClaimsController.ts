@@ -2,9 +2,9 @@ import { IController } from "../../../../config/interfaces/IController";
 import { IPresenter } from "../../../../config/interfaces/IPresenter";
 import { IRequest } from "../../../../config/interfaces/IRequest";
 import { Presenter } from "../../../Presenter";
-import  FindUserUseCase  from "../useCase/findUserUseCase";
+import FindClaimsUseCase from "../useCase/findClaimsUseCase";
 
-export default class findAllUsersController implements IController{
+export default class findAllClaimsController implements IController{
     private readonly presenter: IPresenter
     
     constructor(){
@@ -12,14 +12,13 @@ export default class findAllUsersController implements IController{
     }
 
     public async Handle(request:IRequest){
-        const useCaseResponse = new FindUserUseCase(this.presenter)
+        const useCaseResponse = new FindClaimsUseCase(this.presenter)
 
         if(Object.keys(request.query).length === 0) {
             await useCaseResponse.AllExecuteAsync();
             return this.presenter
         }
-            await useCaseResponse.SomeExecuteAsync(request.query); 
-            return this.presenter
-        
+            await useCaseResponse.TypeExecuteAsync(request.query.type); 
+            return this.presenter 
     }
 }

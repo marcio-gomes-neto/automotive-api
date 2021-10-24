@@ -27,7 +27,7 @@ export class OutsourceServices{
             const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
 
             await osRepo.saveOutsource(osData)
-            this._osConn.close()
+            await this._osConn.close()
 
             return {message: "Outsource Created With Sucess!",outsource: osData}
         } catch (error) {
@@ -41,7 +41,7 @@ export class OutsourceServices{
             const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
 
             const findOutsource = await osRepo.findById(id)
-            this._osConn.close()
+            await this._osConn.close()
 
             if(findOutsource){
                 return {message: "User Found!",outsource: findOutsource}
@@ -59,7 +59,7 @@ export class OutsourceServices{
             const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
 
             const findOutsource = await osRepo.findAll()
-            this._osConn.close()
+            await this._osConn.close()
 
             if(findOutsource){
                 return {message: `There are ${findOutsource[1]} Outsource(s)!`,outsource: findOutsource}
@@ -77,12 +77,30 @@ export class OutsourceServices{
             const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
 
             const findOutsource = await osRepo.findByCpf(cpf)
-            this._osConn.close()
+            await this._osConn.close()
 
             if(findOutsource){
-                return {message: `User Found!`,outsource: findOutsource}
+                return {message: `Outsource Found!`,outsource: findOutsource}
             }
             return {message: "CPF not found"}
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async findOutsourceByCnh(cnh:IOutsource["cpf"]){
+        try {
+            await this._osConn.connect()
+            const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
+
+            const findOutsource = await osRepo.findByCnh(cnh)
+            await this._osConn.close()
+
+            if(findOutsource){
+                return {message: `Outsource Found!`,outsource: findOutsource}
+            }
+            return {message: "CNH not found"}
             
         } catch (error) {
             console.log(error)
@@ -95,12 +113,13 @@ export class OutsourceServices{
             const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
 
             const findOutsource = await osRepo.findByName(name)
-            this._osConn.close()
+            await this._osConn.close()
 
-            if(findOutsource){
-                return {message: `There are ${findOutsource[1]} Outsource(s)!`,outsource: findOutsource}
+            if(findOutsource[1] == 0){
+                return {message: "Name not found"}
+                
             }
-            return {message: "Name not found"}
+            return {message: `There are ${findOutsource[1]} Outsource(s)!`,outsource: findOutsource}
             
         } catch (error) {
             console.log(error)
@@ -116,11 +135,41 @@ export class OutsourceServices{
             await osRepo.updateOutsource(cpf, data)
             const updatedOutsource = await osRepo.findByCpf(cpf)
 
-            this._osConn.close()
+            await this._osConn.close()
             
             return {message: "User Updated!", outsource: updatedOutsource}
         } catch (error) {
             console.log(error)
         }
+    }
+
+    async addOneClaim(cpf:string){
+        try {
+
+            await this._osConn.connect()
+            const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
+
+            await osRepo.addOneClaim(cpf)
+
+            await this._osConn.close()
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    async outsourceNowUser(cpf:string){
+        try {
+
+            await this._osConn.connect()
+            const osRepo = this._osConn.getCustomRepository(OutsourceRepository)
+
+            await osRepo.nowUser(cpf)
+
+            await this._osConn.close()
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 }

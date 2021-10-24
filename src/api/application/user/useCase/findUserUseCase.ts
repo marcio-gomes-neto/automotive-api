@@ -1,6 +1,6 @@
 import { IPresenter } from "../../../../config/interfaces/IPresenter";
-import { IUser } from "../../../../repositories/intefaces/user/IUser"
-import { UserServices } from "../../../../repositories/services/UserServices"
+import { IUser } from "../../../../factory/intefaces/user/IUser"
+import { UserServices } from "../../../../factory/services/UserServices"
 
 export default class FindUserUseCase{
     public readonly result;

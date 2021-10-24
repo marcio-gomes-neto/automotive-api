@@ -2,7 +2,7 @@ import { IController } from "../../../../config/interfaces/IController";
 import { IPresenter } from "../../../../config/interfaces/IPresenter";
 import { IRequest } from "../../../../config/interfaces/IRequest";
 import { Presenter } from "../../../Presenter";
-import  findUserUseCase  from "../useCase/findUserUseCase";
+import  FindUserUseCase  from "../useCase/findUserUseCase";
 
 export default class findUserByIdController implements IController{
     private readonly presenter: IPresenter
@@ -13,7 +13,7 @@ export default class findUserByIdController implements IController{
 
     public async Handle(request:IRequest){
 
-      const useCaseResponse = new findUserUseCase(this.presenter)
+      const useCaseResponse = new FindUserUseCase(this.presenter)
       await useCaseResponse.IdExecuteAsync(request.params.id)
 
       return this.presenter

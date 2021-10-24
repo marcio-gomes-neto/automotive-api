@@ -2,9 +2,9 @@ import { IController } from "../../../../config/interfaces/IController";
 import { IPresenter } from "../../../../config/interfaces/IPresenter";
 import { IRequest } from "../../../../config/interfaces/IRequest";
 import { Presenter } from "../../../Presenter";
-import  FindUserUseCase  from "../useCase/findUserUseCase";
+import AddClaimNoOutsourceUseCase from "../useCase/addClaimNoOutsourceUseCase";
 
-export default class findUserByCpfController implements IController{
+export default class addClaimNoOutsourceController implements IController{
     private readonly presenter: IPresenter
     
     constructor(){
@@ -12,11 +12,9 @@ export default class findUserByCpfController implements IController{
     }
 
     public async Handle(request:IRequest){
-        
-      const useCaseResponse = new FindUserUseCase(this.presenter)
-      await useCaseResponse.CpfExecuteAsync(request.params.cpf)
+        const useCaseResponse = new AddClaimNoOutsourceUseCase(this.presenter)
 
-      return this.presenter
+            await useCaseResponse.ExecuteAsync(request.params.cpf, request.body);
+            return this.presenter   
     }
-  
 }

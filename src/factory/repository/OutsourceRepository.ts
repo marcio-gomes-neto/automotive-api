@@ -7,15 +7,8 @@ import { IOutsourceUpdate } from "../intefaces/outsource/IOutsourceUpdate";
 
 @EntityRepository(outsource)
 export class OutsourceRepository extends Repository<outsource> implements IOutsourceRepository{
-    // findAll: () => Promise<[IOutsource[], number]>
-    // findById: (id: IOutsource["id"]) => Promise<IOutsource>
-    // findByName: (name: IOutsource["name"]) => Promise<[IOutsource[], number]>
-    // findByCpf:(cpf: IOutsource["cpf"]) => Promise<IOutsource>
 
-    // updateOutsource:(cpf:IOutsource["cpf"], userData:IOutsourceUpdate ) => Promise<UpdateResult>
-
-    // saveOutsource: (userData: IOutsource) => Promise<InsertResult>
-    findAll(){
+  findAll(){
         return this.createQueryBuilder("outsource")
           .where("outsource.user = :bool",{ bool: false })
           .getManyAndCount();
@@ -38,6 +31,11 @@ export class OutsourceRepository extends Repository<outsource> implements IOutso
         .where("outsource.cpf = :cpf", { cpf: cpf })
         .getOne();
     }
+    findByCnh(cnh: string){
+      return this.createQueryBuilder("outsource")
+      .where("outsource.cnh = :cnh", { cnh: cnh })
+      .getOne();
+    }
 
     saveOutsource(data: IOutsource){
         return this.createQueryBuilder("outsource")
@@ -55,7 +53,7 @@ export class OutsourceRepository extends Repository<outsource> implements IOutso
         .execute();
     }  
 
-    addOneClaim(cpf: number){
+    addOneClaim(cpf: string){
         return this.createQueryBuilder("outsource")
         .update()
         .set({ claims: () => "claims + 1" })
@@ -63,5 +61,12 @@ export class OutsourceRepository extends Repository<outsource> implements IOutso
         .execute();
       }
 
-
+      
+    nowUser(cpf:string){
+      return this.createQueryBuilder("outsource")
+        .update()
+        .set({ user: true})
+        .where("cpf = :cpf", { cpf: cpf })
+        .execute();
+    }
 }

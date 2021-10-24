@@ -1,7 +1,8 @@
 import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm'
+import { IClaims } from '../intefaces/claims/IClaims'
 
 @Entity()
-export class Claims{
+export class claims implements IClaims{
     @PrimaryGeneratedColumn()
     id:number
     

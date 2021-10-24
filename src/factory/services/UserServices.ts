@@ -26,7 +26,7 @@ export class UserServices{
             const userRepo = this._userConn.getCustomRepository(UserRepository)
 
             await userRepo.saveUser(userData)
-            this._userConn.close()
+            await this._userConn.close()
 
             return {message: "User Created With Sucess!",user: userData}
         } catch (error) {
@@ -40,7 +40,7 @@ export class UserServices{
             const userRepo = this._userConn.getCustomRepository(UserRepository)
 
             const findUser = await userRepo.findById(id)
-            this._userConn.close()
+            await this._userConn.close()
 
             if(findUser){
                 return {message: "User Found!",user: findUser}
@@ -58,7 +58,7 @@ export class UserServices{
             const userRepo = this._userConn.getCustomRepository(UserRepository)
 
             const findUser = await userRepo.findAll()
-            this._userConn.close()
+            await this._userConn.close()
 
             if(findUser){
                 return {message: `There are ${findUser[1]} Users!`,users: findUser}
@@ -76,12 +76,30 @@ export class UserServices{
             const userRepo = this._userConn.getCustomRepository(UserRepository)
 
             const findUser = await userRepo.findByCpf(cpf)
-            this._userConn.close()
+            await this._userConn.close()
 
             if(findUser){
                 return {message: `User Found!`,user: findUser}
             }
             return {message: "CPF not found"}
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async findUserByCnh(cnh:IUser["cnh"]){
+        try {
+            await this._userConn.connect()
+            const userRepo = this._userConn.getCustomRepository(UserRepository)
+
+            const findUser = await userRepo.findByCnh(cnh)
+            await this._userConn.close()
+
+            if(findUser){
+                return {message: `User Found!`,user: findUser}
+            }
+            return {message: "CNH not found"}
             
         } catch (error) {
             console.log(error)
@@ -94,12 +112,12 @@ export class UserServices{
             const userRepo = this._userConn.getCustomRepository(UserRepository)
 
             const findUser = await userRepo.findByName(name)
-            this._userConn.close()  
+            await this._userConn.close()  
 
-            if(findUser){
-                return {message: `There are ${findUser[1]} User(s)!`,users: findUser}
+            if(findUser[1] == 0){
+                return {message: "Name not found"}
             }
-            return {message: "Name not found"}
+            return {message: `There are ${findUser[1]} User(s)!`,users: findUser}
             
         } catch (error) {
             console.log(error)
@@ -112,12 +130,13 @@ export class UserServices{
             const userRepo = this._userConn.getCustomRepository(UserRepository)
 
             const findUser = await userRepo.findByGender(gender)
-            this._userConn.close()
+            await this._userConn.close()
 
-            if(findUser){
-                return {message: `There are ${findUser[1]} Users!`,users: findUser}
+            if(findUser[1] == 0){
+                return {message: "Gender not found"}
+               
             }
-            return {message: "Gender not found"}
+            return {message: `There are ${findUser[1]} Users!`,users: findUser} 
             
         } catch (error) {
             console.log(error)
@@ -130,12 +149,13 @@ export class UserServices{
             const userRepo = this._userConn.getCustomRepository(UserRepository)
 
             const findUser = await userRepo.findByCity(city)
-            this._userConn.close()
+            await this._userConn.close()
 
-            if(findUser){
-                return {message: `There are ${findUser[1]} Users!`,users: findUser}
+            if(findUser[1] == 0){
+                return {message: "City not found"}
             }
-            return {message: "City not found"}
+            return {message: `There are ${findUser[1]} Users!`,users: findUser}
+            
             
         } catch (error) {
             console.log(error)
@@ -149,7 +169,7 @@ export class UserServices{
 
             await userRepo.updateUser(cpf, userData)
             const updateUser = await userRepo.findByCpf(cpf)
-            this._userConn.close()
+            await this._userConn.close()
             
             return {message: "User Updated!", user: updateUser}
         } catch (error) {
@@ -164,10 +184,41 @@ export class UserServices{
 
             await userRepo.disableUser(cpf)
             const disabledUser = await userRepo.findByCpf(cpf)
+            await this._userConn.close()
 
             return {message: "User Disabled!", user: disabledUser}
         } catch (error) {
             console.log(error)
         }
+    }
+
+    async enableUser(cpf:string){
+        try {
+            await this._userConn.connect()
+            const userRepo = this._userConn.getCustomRepository(UserRepository)
+
+            await userRepo.enableUser(cpf)
+            const enabledUser = await userRepo.findByCpf(cpf)
+            await this._userConn.close()
+
+            return {message: "User Enabled!", user: enabledUser}
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async addOneClaim(cpf:string){
+        try {
+
+            await this._userConn.connect()
+            const userRepo = this._userConn.getCustomRepository(UserRepository)
+
+            await userRepo.addOneClaim(cpf)
+
+            await this._userConn.close()
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 }

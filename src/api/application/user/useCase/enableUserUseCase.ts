@@ -3,7 +3,7 @@ import { IPresenter } from "../../../../config/interfaces/IPresenter";
 import { IUser } from "../../../../factory/intefaces/user/IUser"
 import { UserServices } from "../../../../factory/services/UserServices"
 
-export default class DisableUserUseCase{
+export default class EnableUserUseCase{
     public readonly result;
 
     constructor(presenter:IPresenter){
@@ -18,9 +18,9 @@ export default class DisableUserUseCase{
             if (!cpf.isValid(_input)) throw new Error('CPF Invalid')
 
             const userService = new UserServices
-            const resultDisableUser = await userService.disableUser(_input)
+            const resultEnableUser = await userService.enableUser(_input)
 
-            this.result.RespondOk(resultDisableUser)
+            this.result.RespondOk(resultEnableUser)
         } catch (error) {
             this.result.RespondInternalServerError(error.message)
         }

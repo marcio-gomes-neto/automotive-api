@@ -7,8 +7,10 @@ export interface IOutsourceRepository{
     findById: (id: IOutsource["id"]) => Promise<IOutsource>
     findByName: (name: IOutsource["name"]) => Promise<[IOutsource[], number]>
     findByCpf:(cpf: IOutsource["cpf"]) => Promise<IOutsource>
+    findByCnh:(cnh: IOutsource["cnh"]) => Promise<IOutsource>
 
     updateOutsource:(cpf:IOutsource["cpf"], userData:IOutsourceUpdate ) => Promise<UpdateResult>
-
+    addOneClaim: (cpf: string) => Promise<UpdateResult>
+    
     saveOutsource: (userData: IOutsource) => Promise<InsertResult>
 }
