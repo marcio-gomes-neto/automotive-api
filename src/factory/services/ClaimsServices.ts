@@ -46,7 +46,7 @@ export class ClaimServices{
             await this._claimsConn.close()
 
             if(findClaim){
-                return {message: `There are ${findClaim[1]} Claim(s)!`,outsource: findClaim}
+                return {message: `There are ${findClaim[1]} Claim(s)!`,claims: findClaim}
             }
             return {message: "Unexpected Error!"}
             
@@ -64,7 +64,7 @@ export class ClaimServices{
             await this._claimsConn.close()
 
             if(findClaim){
-                return {message: "Claim Found!",user: findClaim}
+                return {message: "Claim Found!",claim: findClaim}
             }
             return {message: "ID Not Found!"}
             
@@ -97,7 +97,7 @@ export class ClaimServices{
             await this._claimsConn.connect()
             const claimsRepo = this._claimsConn.getCustomRepository(ClaimsRepository)
 
-            const findClaim = await claimsRepo.findClaimsFromUser(cpf)
+            const findClaim = await claimsRepo.findClaimsFromOutsource(cpf)
             await this._claimsConn.close()
 
             if(findClaim[1] == 0){
@@ -123,6 +123,25 @@ export class ClaimServices{
                 return {message: "There are no Claims with this type!"}
             }else{
                 return {message: `There are ${findClaim[1]} ${type} claim(s)!`, claims:findClaim[0]}
+            }
+        } catch (error) {
+            console.log(error)
+        }
+            
+    }
+
+    async findClaimsByVehicles(vehicle: IClaims["vehicle"]){
+        try {
+            await this._claimsConn.connect()
+            const claimsRepo = this._claimsConn.getCustomRepository(ClaimsRepository)
+
+            const findClaim = await claimsRepo.findByVehicle(vehicle)
+            await this._claimsConn.close()
+
+            if(findClaim[1] == 0){
+                return {message: "There are no Claims with this vehicle!"}
+            }else{
+                return {message: `There are ${findClaim[1]} ${vehicle} claim(s)!`, claims:findClaim[0]}
             }
         } catch (error) {
             console.log(error)

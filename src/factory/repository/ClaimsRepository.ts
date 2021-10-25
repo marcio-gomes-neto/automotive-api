@@ -35,6 +35,12 @@ export class ClaimsRepository extends Repository<claims> implements IClaimsRepos
         .getManyAndCount()
     }
 
+    findByVehicle(vehicle: string){
+      return this.createQueryBuilder("claims")
+      .where ("claims.vehicle = :vehicle", {vehicle: vehicle})
+      .getManyAndCount()
+  }
+
     saveClaim(data: IClaims){
         return this.createQueryBuilder("claims")
         .insert()

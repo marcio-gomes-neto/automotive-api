@@ -5,7 +5,7 @@ import { ClaimServices } from "../../../../factory/services/ClaimsServices";
 import { OutsourceServices } from "../../../../factory/services/OutsourceServices";
 
 export default class FindOutsourceClaimsUseCase{
-    public readonly result;
+    public readonly result:IPresenter;
 
     constructor(presenter:IPresenter){
         this.result = presenter
@@ -20,9 +20,9 @@ export default class FindOutsourceClaimsUseCase{
             if(user.message == "CPF not found") throw new Error("No outsource with informed CPF") 
             
             const resultFindOutsourceClaim = await claimServices.findClaimsFromOutsource(_input)
-            this.result.RespondOk(resultFindOutsourceClaim)
+            this.result.RespondOk(resultFindOutsourceClaim, 200)
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 }

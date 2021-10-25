@@ -126,7 +126,7 @@ export class OutsourceServices{
         }
     }
 
-    async updateUser(cpf:string, data:IOutsourceUpdate){
+    async updateOutsource(cpf:string, data:IOutsourceUpdate){
         try {
 
             await this._osConn.connect()
@@ -137,7 +137,7 @@ export class OutsourceServices{
 
             await this._osConn.close()
             
-            return {message: "User Updated!", outsource: updatedOutsource}
+            return {message: "Outsource Updated!", outsource: updatedOutsource}
         } catch (error) {
             console.log(error)
         }

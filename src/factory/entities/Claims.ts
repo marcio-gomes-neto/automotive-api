@@ -11,6 +11,9 @@ export class claims implements IClaims{
 
     @Column({ type: "varchar", length: 255, unique: true, nullable: false })
     type: string
+    
+    @Column({ type: "varchar", length: 255, nullable: false})
+    vehicle: string
 
     @Column({ type: "varchar", length: 11, unique: true, nullable: false })
     cpf_user: string

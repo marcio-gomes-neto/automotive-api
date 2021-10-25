@@ -4,7 +4,7 @@ import { IUser } from "../../../../factory/intefaces/user/IUser"
 import { UserServices } from "../../../../factory/services/UserServices"
 
 export default class EnableUserUseCase{
-    public readonly result;
+    public readonly result:IPresenter;
 
     constructor(presenter:IPresenter){
         this.result = presenter
@@ -13,16 +13,16 @@ export default class EnableUserUseCase{
     async ExecuteAsync (_input:IUser["cpf"]){
         try {
             
-            if (_input === undefined) throw new Error('Argument Cant Be Null')
+            if (Object.keys(_input).length === 0) throw new Error('Argument Cant Be Null')
             if (typeof _input != "string") throw new Error('Invalid Argument')
             if (!cpf.isValid(_input)) throw new Error('CPF Invalid')
 
             const userService = new UserServices
             const resultEnableUser = await userService.enableUser(_input)
 
-            this.result.RespondOk(resultEnableUser)
+            this.result.RespondOk(resultEnableUser, 200)
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 }

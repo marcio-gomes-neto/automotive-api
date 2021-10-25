@@ -4,12 +4,12 @@ export class Presenter implements IPresenter{
     public body: any
     public code: any
 
-    RespondOk (response: any): void {
+    RespondOk (response: any, code: number): void {
       this.body = response
-      this.code = 200
+      this.code = code
     }
   
-    RespondInternalServerError (exception: Error): void {
+    RespondInternalServerError (exception: Error, code:number): void {
       this.body = exception
       this.code = 400
     }

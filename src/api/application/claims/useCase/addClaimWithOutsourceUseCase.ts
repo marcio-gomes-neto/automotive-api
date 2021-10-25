@@ -10,7 +10,7 @@ import { OutsourceServices } from "../../../../factory/services/OutsourceService
 import { UserServices } from "../../../../factory/services/UserServices";
 
 export default class AddClaimWithOutsourceUseCase{
-    public readonly result;
+    public readonly result:IPresenter;
 
     constructor(presenter:IPresenter){
         this.result = presenter
@@ -18,6 +18,7 @@ export default class AddClaimWithOutsourceUseCase{
 
     async ExecuteAsync (userCpf:IUser["cpf"], _input: {claim: IClaims, outsource: IOutsource}){
         try {
+            
             if(Object.keys(_input.claim).length === 0) throw new Error('Claim argument invalid')
             if(Object.keys(_input.outsource).length === 0) throw new Error('Outsource argument invalid')
 
@@ -28,30 +29,23 @@ export default class AddClaimWithOutsourceUseCase{
             const user = await userServices.findUserByCpf(userCpf)
             if( user.message == "CPF not found") throw new Error("User Not Found!")
 
-            let keyWithNoSpace
-
             if(_input.outsource.id) throw new Error('No need to send ID')
-            
-            if(!cpf.isValid(_input.outsource.cpf)) throw new Error('Invalid CPF')
+            if(!cpf.isValid(_input.outsource.cpf) || _input.outsource.cpf == userCpf) throw new Error('Invalid Outsource CPF')
+             
+            const findUserCNH = await userServices.findUserByCnh(_input.outsource.cnh)
+            if(findUserCNH.message == "User found!") throw new Error("This CNH belongs to a user!")
 
-            if(!emailValidator.validate(_input.outsource.email)) throw new Error('Invalid email')
-            
-
-            _input.outsource.cnh.replace(/\s/g, '')
-            if (_input.outsource.cnh.length != 10 || typeof _input.outsource.cnh != "string") throw new Error('Invalid CNH')
-            
-            keyWithNoSpace =_input.outsource.name.replace(/\s/g, '')
-            if (keyWithNoSpace.length < 3 || typeof _input.outsource.name != "string") throw new Error('Invalid email')
-    
-            keyWithNoSpace = _input.outsource.phone.replace(/\s/g, '')
-            if (keyWithNoSpace.length < 3 || typeof _input.outsource.phone != "string") throw new Error('Invalid phone')
-            
             const findOutsourceCPF = await outsourceServices.findOutsourceByCpf(_input.outsource.cpf)
             
-            if(findOutsourceCPF.message == "CPF not found"){
-
-                const findOutSourceCNH = await outsourceServices.findOutsourceByCnh(_input.outsource.cnh)
-                if(findOutSourceCNH.message == "Outsource found!") throw new Error("CNH already exists")
+            if(findOutsourceCPF.message == "CPF not found" ){
+                
+                if(!emailValidator.validate(_input.outsource.email)) throw new Error('Invalid email')
+            
+                if (_input.outsource.cnh.length != 10 || typeof _input.outsource.cnh != "string") throw new Error('Invalid CNH')
+                
+                if (_input.outsource.name.length < 3 || typeof _input.outsource.name != "string") throw new Error('Invalid email')
+        
+                if (_input.outsource.phone.length < 3 || typeof _input.outsource.phone != "string") throw new Error('Invalid phone')
 
                 const outsource:IOutsource = {
                     name: _input.outsource.name,
@@ -64,28 +58,39 @@ export default class AddClaimWithOutsourceUseCase{
                 }
                 await outsourceServices.SaveNewOutsource(outsource)
             } else {
-                await outsourceServices.addOneClaim(_input.outsource.cpf)
+                if(findOutsourceCPF.outsource.user) {
+                    await userServices.addOneClaim(_input.outsource.cpf)
+                } else {
+                    const findOutSourceCNH = await outsourceServices.findOutsourceByCnh(_input.outsource.cnh)
+                    if(findOutSourceCNH.message == "Outsource found!") throw new Error("This CNH belongs to another outsource!")
+                   
+                    await outsourceServices.addOneClaim(_input.outsource.cpf)
+                }
             }
 
             if(_input.claim.id) throw new Error ("No need to send ID")
 
-            keyWithNoSpace =_input.claim.desc.replace(/\s/g, '')
-            if (keyWithNoSpace.length < 3 || typeof _input.claim.desc != "string") throw new Error('Invalid description')
-    
-            keyWithNoSpace = _input.claim.type.replace(/\s/g, '')
-            if (keyWithNoSpace.length < 3 || typeof _input.claim.type != "string") throw new Error('Invalid type')
+            if (_input.claim.desc.length < 3 || typeof _input.claim.desc != "string") throw new Error('Invalid description')
+
+            if (_input.claim.type.length < 3 || typeof _input.claim.type != "string") throw new Error('Invalid type')
+
+            if (_input.claim.vehicle.length < 3 || typeof _input.claim.vehicle != "string") throw new Error('Invalid Vehicle')
             
             const claim:IClaims = {
                 desc: _input.claim.desc,
                 type: _input.claim.type,
+                vehicle: _input.claim.vehicle,
                 cpf_user: userCpf,
                 cpf_outsource:_input.outsource.cpf
             }
             await userServices.addOneClaim(userCpf)
+            
             const resultFindAllOutsource = await claimServices.saveNewClaim(claim)
-            this.result.RespondOk(resultFindAllOutsource)
+            
+            this.result.RespondOk(resultFindAllOutsource, 201)
+            return
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 }

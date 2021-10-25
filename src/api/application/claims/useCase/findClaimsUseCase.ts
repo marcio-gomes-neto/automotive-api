@@ -3,7 +3,7 @@ import { ClaimServices } from "../../../../factory/services/ClaimsServices";
 import { IClaims } from "../../../../factory/intefaces/claims/IClaims";
 
 export default class FindClaimsUseCase{
-    public readonly result;
+    public readonly result:IPresenter;
 
     constructor(presenter:IPresenter){
         this.result = presenter
@@ -14,9 +14,9 @@ export default class FindClaimsUseCase{
             const claimServices = new ClaimServices
             const resultFindClaim = await claimServices.findClaimById(_input)
 
-            this.result.RespondOk(resultFindClaim)
+            this.result.RespondOk(resultFindClaim, 200)
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 
@@ -25,21 +25,27 @@ export default class FindClaimsUseCase{
             const claimServices = new ClaimServices
             const resultFindAllClaims = await claimServices.findAllClaims()
 
-            this.result.RespondOk(resultFindAllClaims)
+            this.result.RespondOk(resultFindAllClaims, 200)
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 
-    async TypeExecuteAsync(_input:IClaims["type"]){
+    async SomeExecuteAsync(_input:any){
         try {
-            if(_input === null) throw new Error("Argument type cant be null!")
             const claimServices = new ClaimServices
-            const resultFindClaim = await claimServices.findClaimsByType(_input)
+            if(_input.type) {
+                const resultFindClaim = await claimServices.findClaimsByType(_input.type)
+                this.result.RespondOk(resultFindClaim, 200 )
+            } else if(_input.vehicle){
+                const resultFindClaim = await claimServices.findClaimsByVehicles(_input.vehicle)
+                this.result.RespondOk(resultFindClaim, 200 )
+            }else{
+                this.result.RespondOk({message: "Cannot search with selected query"}, 200)
+            }
 
-            this.result.RespondOk(resultFindClaim)
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400 )
         }
     }
 }

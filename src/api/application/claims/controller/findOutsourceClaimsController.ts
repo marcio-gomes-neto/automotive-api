@@ -14,7 +14,7 @@ export default class findOutSourceClaimsController implements IController{
     public async Handle(request:IRequest){
         const useCaseResponse = new FindOutsourceClaimsUseCase(this.presenter)
 
-            await useCaseResponse.ExecuteAsync(request.query.cpf); 
+            await useCaseResponse.ExecuteAsync(request.params.cpf); 
             return this.presenter 
     }
 }

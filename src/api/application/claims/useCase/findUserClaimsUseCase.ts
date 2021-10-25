@@ -4,7 +4,7 @@ import { UserServices } from "../../../../factory/services/UserServices";
 import { IUser } from "../../../../factory/intefaces/user/IUser";
 
 export default class FindUserClaimsUseCase{
-    public readonly result;
+    public readonly result:IPresenter;
 
     constructor(presenter:IPresenter){
         this.result = presenter
@@ -22,13 +22,13 @@ export default class FindUserClaimsUseCase{
                     asUser: await claimServices.findClaimsFromUser(_input) 
                 }
                 
-                this.result.RespondOk(result)
+                this.result.RespondOk(result, 200)
             }else{
                 const resultFindUserClaim = await claimServices.findClaimsFromUser(_input)
-                this.result.RespondOk(resultFindUserClaim)
+                this.result.RespondOk(resultFindUserClaim, 200)
             }
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 }

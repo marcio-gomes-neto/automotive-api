@@ -3,7 +3,7 @@ import { OutsourceServices } from "../../../../factory/services/OutsourceService
 import { IOutsource } from "../../../../factory/intefaces/outsource/IOutsource";
 
 export default class FindOutsourceUseCase{
-    public readonly result;
+    public readonly result:IPresenter;
 
     constructor(presenter:IPresenter){
         this.result = presenter
@@ -14,9 +14,9 @@ export default class FindOutsourceUseCase{
             const outsourceServices = new OutsourceServices
             const resultFindOutsource = await outsourceServices.findOutsourceById(_input)
 
-            this.result.RespondOk(resultFindOutsource)
+            this.result.RespondOk(resultFindOutsource, 200)
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 
@@ -25,9 +25,9 @@ export default class FindOutsourceUseCase{
             const outsourceServices = new OutsourceServices
             const resultFindAllOutsources = await outsourceServices.findAllOutsources()
 
-            this.result.RespondOk(resultFindAllOutsources)
+            this.result.RespondOk(resultFindAllOutsources, 200)
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 
@@ -36,9 +36,9 @@ export default class FindOutsourceUseCase{
             const outsourceServices = new OutsourceServices
             const resultFindOutsource = await outsourceServices.findOutsourceByCpf(_input)
 
-            this.result.RespondOk(resultFindOutsource)
+            this.result.RespondOk(resultFindOutsource, 200 )
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400)
         }
     }
 
@@ -48,13 +48,13 @@ export default class FindOutsourceUseCase{
     
             if(_input.name) {
                 const resultFindOutsource = await outsourceServices.findOutsourceByName(_input.name)
-                this.result.RespondOk(resultFindOutsource)
+                this.result.RespondOk(resultFindOutsource, 200 )
             } else {
-                this.result.RespondOk({message: "Cannot search with selected query"})
+                this.result.RespondOk({message: "Cannot search with selected query"}, 200)
             }
 
         } catch (error) {
-            this.result.RespondInternalServerError(error.message)
+            this.result.RespondInternalServerError(error.message, 400 )
         }
     }
 }

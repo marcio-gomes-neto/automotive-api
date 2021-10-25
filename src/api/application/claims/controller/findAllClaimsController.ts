@@ -18,7 +18,7 @@ export default class findAllClaimsController implements IController{
             await useCaseResponse.AllExecuteAsync();
             return this.presenter
         }
-            await useCaseResponse.TypeExecuteAsync(request.query.type); 
+            await useCaseResponse.SomeExecuteAsync(request.query); 
             return this.presenter 
     }
 }

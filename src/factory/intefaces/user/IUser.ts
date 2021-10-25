@@ -10,7 +10,7 @@ export interface IUser {
     city?: string
     claims?: number
     age: string
-    active: boolean
-    outsource: boolean
+    active?: boolean
+    outsource?: boolean
   }
   

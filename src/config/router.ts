@@ -1,11 +1,11 @@
 import express from "express";
+
 import addClaimNoOutsourceController from "../api/application/claims/controller/addClaimNoOutsourceController";
 import addClaimWithOutsourceController from "../api/application/claims/controller/addClaimWithOutsourceController";
 import findAllClaimsController from "../api/application/claims/controller/findAllClaimsController";
 import findClaimByIdController from "../api/application/claims/controller/findClaimsByIdController";
 import findOutSourceClaimsController from "../api/application/claims/controller/findOutsourceClaimsController";
 import findUserClaimsController from "../api/application/claims/controller/findUserClaimsController";
-import AddClaimNoOutsourceUseCase from "../api/application/claims/useCase/addClaimNoOutsourceUseCase";
 
 import findAllOutsourcesController from "../api/application/outsource/controller/findAllOutsourcesController";
 import findOutsourceByCpfController from "../api/application/outsource/controller/findOutsourceByCpfController";
@@ -21,6 +21,7 @@ import findUserByIdController from "../api/application/user/controller/findUserB
 import UpdateUserController from "../api/application/user/controller/updateUserController";
 
 import { routerAdapter } from "./adapters/RouterAdapter";
+
 const router = express.Router()
 // USER ROUTES ------------------------------------------------------------------------------------------------------------
 router.get('/user/:id', routerAdapter(new findUserByIdController()));
@@ -45,5 +46,5 @@ router.get('/outsource/:cpf/claims', routerAdapter(new findOutSourceClaimsContro
 
 router.post('/user/:cpf/newclaim/outsource',routerAdapter(new addClaimWithOutsourceController()))
 router.post('/user/:cpf/newclaim/', routerAdapter(new addClaimNoOutsourceController()))
-
+    
 export default router

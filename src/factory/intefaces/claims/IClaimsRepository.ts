@@ -9,7 +9,9 @@ export interface IClaimsRepository{
     findClaimsFromUser: (cpf:IUser["cpf"]) => Promise<[IClaims[], number]>
     findClaimsFromOutsource: (cpf:IOutsource["cpf"]) => Promise<[IClaims[], number]>
     findById: (id: IClaims["id"]) => Promise<IClaims>
+
     findByType: (type: IClaims["type"]) => Promise<[IClaims[], number]>
+    findByVehicle: (type: IClaims["vehicle"]) => Promise<[IClaims[], number]>
 
     saveClaim: (data: IClaims) => Promise<InsertResult>
 
