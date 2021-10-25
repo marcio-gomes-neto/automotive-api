@@ -7,16 +7,16 @@ import { ClaimsRepository } from "../repository/ClaimsRepository";
 
 export class ClaimServices{
     private readonly _claimsConn:Connection
-
+    private readonly port:any = process.env.PORT
     constructor(){
         const connectionManager = getConnectionManager()
         this._claimsConn = connectionManager.create({
             type: "postgres",
-            host: "localhost",
-            port: 5432,
-            username: "postgres",
-            password: "root",
-            database: "vehicle_secure_db",
+            host:  process.env.HOST,
+            port: parseInt(this.port),
+            username: process.env.USERNAME,
+            password: process.env.PASSWORD,
+            database: process.env.DATABASE,
             entities: [claims],
 
         });
